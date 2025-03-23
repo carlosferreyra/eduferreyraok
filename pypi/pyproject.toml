@@ -1,7 +1,7 @@
 [project]
 name = "eduferreyraok"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.0.1"
+description = "PyPI package as profile for Carlos Eduardo Ferreyra"
 readme = "README.md"
 authors = [
     { name = "Carlos Eduardo Ferreyra", email = "eduferreyraok@gmail.com" }
@@ -20,3 +20,7 @@ python-source = "src"
 [build-system]
 requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
+[project.urls]
+Homepage = "https://carlosferreyra.github.io/eduferreyraok"
+Repository = "https://github.com/carlosferreyra/eduferreyraok"
+Documentation = "https://carlosferreyra.github.io/eduferreyraok"

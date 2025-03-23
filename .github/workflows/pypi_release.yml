@@ -1,4 +1,4 @@
-name: PyPI
+name: PyPI Release
 
 on:
   push:
@@ -7,6 +7,15 @@ on:
     paths:
       - 'pypi/**'
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment target (testpypi or pypi)'
+        required: true
+        default: 'testpypi'
+        type: choice
+        options:
+          - testpypi
+          - pypi
 
 jobs:
   release-build:
@@ -23,18 +32,21 @@ jobs:
           pyproject-file: 'pyproject.toml'
 
       - name: build release distributions
-        run: uv build
+        run: |
+          cd pypi
+          uv build
 
-      - name: upload windows dists
+      - name: upload distributions
         uses: actions/upload-artifact@v4
         with:
           name: release-dists
-          path: dist/
+          path: pypi/dist/
 
-  pypi-publish:
+  publish-testpypi:
     runs-on: ubuntu-latest
     needs:
       - release-build
+    if: github.event.inputs.environment == 'testpypi' || github.event_name == 'push'
     permissions:
       id-token: write
 
@@ -45,5 +57,25 @@ jobs:
           name: release-dists
           path: dist/
 
-      - name: Publish release distributions to PyPI
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@v1.12.4
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+  publish-pypi:
+    runs-on: ubuntu-latest
+    needs:
+      - release-build
+    if: github.event.inputs.environment == 'pypi'
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Retrieve release distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: release-dists
+          path: dist/
+
+      - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@v1.12.4
