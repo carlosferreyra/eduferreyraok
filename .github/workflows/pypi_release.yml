@@ -33,7 +33,6 @@ jobs:
 
       - name: build release distributions
         run: |
-          cd pypi
           uv build
 
       - name: upload distributions
