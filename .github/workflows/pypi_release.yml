@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-dists
-          path: pypi/dist/
+          path: dist/
 
   publish-testpypi:
     runs-on: ubuntu-latest
